@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIBE+ Cash Flow Statement – 12 Months</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f4f0; --text: #1a1a18; --text2: #6b6a64; --text3: #9b9a94;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --teal: #1D9E75; --teal-bg: #E1F5EE; --teal-text: #085041;
+    --coral: #D85A30; --coral-bg: #FAECE7; --coral-text: #712B13;
+    --blue: #378ADD; --blue-bg: #E6F1FB; --blue-text: #0C447C;
+    --amber: #BA7517; --amber-bg: #FAEEDA; --amber-text: #633806;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #252522; --text: #e8e6de; --text2: #9b9a94; --text3: #6b6a64;
+      --border: rgba(255,255,255,0.12); --border2: rgba(255,255,255,0.22);
+      --teal-bg: #04342C; --teal-text: #9FE1CB;
+      --coral-bg: #4A1B0C; --coral-text: #F5C4B3;
+      --blue-bg: #042C53; --blue-text: #B5D4F4;
+      --amber-bg: #412402; --amber-text: #FAC775;
+    }
+  }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+  .scenario-bar { display: flex; gap: 6px; margin-bottom: 1.2rem; }
+  .sc-btn { flex: 1; padding: 8px 0; font-size: 13px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .sc-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: transparent; font-weight: 600; }
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .mc { background: var(--bg2); border-radius: var(--radius); padding: 12px 14px; }
+  .mc-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .mc-val { font-size: 18px; font-weight: 600; color: var(--text); }
+  .mc-val.pos { color: var(--teal); }
+  .chart-wrap { position: relative; width: 100%; height: 280px; margin-bottom: 1.5rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.2rem; font-size: 12px; color: var(--text2); }
+  .leg-item { display: flex; align-items: center; gap: 5px; }
+  .leg-sq { width: 10px; height: 10px; border-radius: 2px; }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 0.5px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { text-align: right; font-weight: 600; font-size: 11px; color: var(--text2); padding: 10px 10px; border-bottom: 0.5px solid var(--border2); background: var(--bg2); text-transform: uppercase; letter-spacing: 0.04em; }
+  thead th:first-child { text-align: left; }
+  tbody tr:nth-child(even) { background: var(--bg2); }
+  tbody td { text-align: right; padding: 8px 10px; color: var(--text); border-bottom: 0.5px solid var(--border); }
+  tbody td:first-child { text-align: left; color: var(--text2); font-weight: 500; }
+  tbody tr:last-child td { border-bottom: none; }
+  .pos-cell { color: var(--teal) !important; font-weight: 600; }
+  .neg-cell { color: var(--coral) !important; font-weight: 600; }
+  .bep-note { margin-top: 1rem; padding: 10px 14px; background: var(--teal-bg); color: var(--teal-text); border-radius: var(--radius); font-size: 13px; }
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<h1>VIBE+ Cash Flow Statement</h1>
+<p class="subtitle">Study Energy Patch Startup — 12-Month Financial Projection (Year 1)</p>
+
+<div class="scenario-bar">
+  <button class="sc-btn" onclick="setScenario('worst', this)">Worst case<br><small>270–330 packs/mo</small></button>
+  <button class="sc-btn active" onclick="setScenario('expected', this)">Expected<br><small>360–420 packs/mo</small></button>
+  <button class="sc-btn" onclick="setScenario('best', this)">Best case<br><small>420–480 packs/mo</small></button>
+</div>
+
+<div class="metrics">
+  <div class="mc"><div class="mc-label">Capital Required</div><div class="mc-val">160M ₫</div></div>
+  <div class="mc"><div class="mc-label">BEP (patches)</div><div class="mc-val">52,449</div></div>
+  <div class="mc"><div class="mc-label">BEP (packages)</div><div class="mc-val">3,497</div></div>
+  <div class="mc"><div class="mc-label">Est. BEP month</div><div class="mc-val pos" id="bep-month">—</div></div>
+</div>
+
+<div class="legend">
+  <span class="leg-item"><span class="leg-sq" style="background:#378ADD;"></span>Revenue</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#D85A30;"></span>Total cost</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#1D9E75;"></span>Net profit</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#BA7517; width:20px; height:3px; border-radius:0;"></span>Monthly BEP threshold</span>
+</div>
+<div class="chart-wrap"><canvas id="cfChart"></canvas></div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Packages sold</th>
+        <th>Revenue (₫)</th>
+        <th>Fixed cost</th>
+        <th>Variable cost</th>
+        <th>Net profit</th>
+        <th>Cumulative</th>
+      </tr>
+    </thead>
+    <tbody id="cf-table"></tbody>
+  </table>
+</div>
+
+<div class="bep-note" id="bep-note"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const STARTUP = 146545000;
+const FIXED_MONTHLY = 900000;
+const VAR_COST_PATCH = 7000;
+const PRICE_PACK = 149000;
+const PATCHES_PER_PACK = 15;
+const TOTAL_YEAR_COST = 157345000;
+
+const scenarios = {
+  worst:    { packs: 300 },
+  expected: { packs: 390 },
+  best:     { packs: 450 }
+};
+
+let chartInst = null;
+
+function fmt(n) { return Math.round(n).toLocaleString('vi-VN'); }
+
+function calcMonths(scenario) {
+  const packs = scenarios[scenario].packs;
+  const patches = packs * PATCHES_PER_PACK;
+  const revenue = packs * PRICE_PACK;
+  const varCost = patches * VAR_COST_PATCH;
+  let cumulative = -STARTUP;
+  return Array.from({length: 12}, (_, i) => {
+    const profit = revenue - FIXED_MONTHLY - varCost;
+    cumulative += profit;
+    return { m: i+1, packs, revenue, fixed: FIXED_MONTHLY, variable: varCost, profit, cumulative };
+  });
+}
+
+function findBEPMonth(rows) {
+  const mp = rows[0].profit;
+  if (mp <= 0) return null;
+  const months = Math.ceil(TOTAL_YEAR_COST / mp);
+  return months <= 12 ? months : null;
+}
+
+function renderTable(rows) {
+  let html = '', cum = -STARTUP;
+  for (const r of rows) {
+    cum += r.profit;
+    html += `<tr>
+      <td>Month ${r.m}</td>
+      <td>${fmt(r.packs)}</td>
+      <td>${fmt(r.revenue)}</td>
+      <td>${fmt(r.fixed)}</td>
+      <td>${fmt(r.variable)}</td>
+      <td class="${r.profit>=0?'pos-cell':'neg-cell'}">${r.profit>=0?'+':''}${fmt(r.profit)}</td>
+      <td class="${cum>=0?'pos-cell':'neg-cell'}">${fmt(cum)}</td>
+    </tr>`;
+  }
+  document.getElementById('cf-table').innerHTML = html;
+}
+
+function renderChart(rows) {
+  const labels = rows.map(r => 'M'+r.m);
+  const revenues = rows.map(r => r.revenue/1e6);
+  const costs = rows.map(r => (r.fixed+r.variable)/1e6);
+  const profits = rows.map(r => r.profit/1e6);
+  const bepLine = rows.map(() => parseFloat((TOTAL_YEAR_COST/1e6/12).toFixed(2)));
+  if (chartInst) chartInst.destroy();
+  chartInst = new Chart(document.getElementById('cfChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Revenue', data: revenues, backgroundColor: '#85B7EB', borderRadius: 3, order: 2 },
+        { label: 'Cost', data: costs, backgroundColor: '#F0997B', borderRadius: 3, order: 3 },
+        { label: 'Net profit', data: profits, type: 'line', borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', pointRadius: 3, tension: 0.3, fill: true, order: 1 },
+        { label: 'BEP/month', data: bepLine, type: 'line', borderColor: '#BA7517', borderDash: [5,4], pointRadius: 0, borderWidth: 1.5, order: 0 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.dataset.label+': '+ctx.parsed.y.toFixed(1)+'M ₫' } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { autoSkip: false } },
+        y: { ticks: { callback: v => v.toFixed(0)+'M' }, grid: { color: 'rgba(128,128,128,0.1)' } }
+      }
+    }
+  });
+}
+
+function update(sc) {
+  const rows = calcMonths(sc);
+  const bep = findBEPMonth(rows);
+  document.getElementById('bep-month').textContent = bep ? 'Month '+bep : '>12 months';
+  const note = document.getElementById('bep-note');
+  note.textContent = bep
+    ? `At ${fmt(scenarios[sc].packs)} packages/month, VIBE+ is projected to recover the full 157,345,000 ₫ total year cost by Month ${bep}.`
+    : `At ${fmt(scenarios[sc].packs)} packages/month, VIBE+ does not reach break-even within Year 1. Monthly sales growth or cost reduction is needed.`;
+  renderTable(rows);
+  renderChart(rows);
+}
+
+function setScenario(sc, btn) {
+  document.querySelectorAll('.sc-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  update(sc);
+}
+
+update('expected');
+</script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIBE+ Cash Flow Statement – 12 Months</title>
+<title>VIBE+ Financial Projections – 12 Months</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -25,22 +25,32 @@
       --amber-bg: #412402; --amber-text: #FAC775;
     }
   }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 1000px; margin: 0 auto; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 1020px; margin: 0 auto; }
   h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
   .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
   .scenario-bar { display: flex; gap: 6px; margin-bottom: 1.2rem; }
-  .sc-btn { flex: 1; padding: 8px 0; font-size: 13px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .sc-btn { flex: 1; padding: 8px 0; font-size: 13px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text2); cursor: pointer; transition: all 0.15s; font-family: inherit; line-height: 1.5; }
   .sc-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: transparent; font-weight: 600; }
-  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1rem; }
   .mc { background: var(--bg2); border-radius: var(--radius); padding: 12px 14px; }
-  .mc-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .mc-val { font-size: 18px; font-weight: 600; color: var(--text); }
+  .mc-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
+  .mc-val { font-size: 17px; font-weight: 600; color: var(--text); }
   .mc-val.pos { color: var(--teal); }
-  .chart-wrap { position: relative; width: 100%; height: 280px; margin-bottom: 1.5rem; }
+  .mc-val.neg { color: var(--coral); }
+  .breakdown { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 1.5rem; }
+  .bi { background: var(--bg2); border-radius: var(--radius); padding: 10px 12px; }
+  .bi .mc-label { font-size: 10.5px; }
+  .bi .val { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 3px; }
+  .bi-blue { background: var(--blue-bg); }
+  .bi-blue .mc-label { color: var(--blue-text); opacity: 0.8; }
+  .bi-blue .val { color: var(--blue-text); }
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.4rem 0; }
+  .chart-wrap { position: relative; width: 100%; height: 280px; margin-bottom: 1.2rem; }
   .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.2rem; font-size: 12px; color: var(--text2); }
   .leg-item { display: flex; align-items: center; gap: 5px; }
-  .leg-sq { width: 10px; height: 10px; border-radius: 2px; }
-  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 0.5px solid var(--border); }
+  .leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 0.5px solid var(--border); margin-bottom: 1rem; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead th { text-align: right; font-weight: 600; font-size: 11px; color: var(--text2); padding: 10px 10px; border-bottom: 0.5px solid var(--border2); background: var(--bg2); text-transform: uppercase; letter-spacing: 0.04em; }
   thead th:first-child { text-align: left; }
@@ -50,35 +60,86 @@
   tbody tr:last-child td { border-bottom: none; }
   .pos-cell { color: var(--teal) !important; font-weight: 600; }
   .neg-cell { color: var(--coral) !important; font-weight: 600; }
-  .bep-note { margin-top: 1rem; padding: 10px 14px; background: var(--teal-bg); color: var(--teal-text); border-radius: var(--radius); font-size: 13px; }
-  @media (max-width: 600px) {
+  .note { padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 1.4rem; }
+  .note-success { background: var(--teal-bg); color: var(--teal-text); }
+  .note-warn { background: var(--coral-bg); color: var(--coral-text); }
+  .assumptions { background: var(--bg2); border-radius: var(--radius-lg); padding: 14px 16px; font-size: 12.5px; color: var(--text2); line-height: 1.85; }
+  .assumptions strong { color: var(--text); }
+  .assumptions ul { padding-left: 1.2rem; }
+  @media (max-width: 640px) {
     body { padding: 1rem; }
     .metrics { grid-template-columns: repeat(2, 1fr); }
+    .breakdown { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
 <body>
-<h1>VIBE+ Cash Flow Statement</h1>
-<p class="subtitle">Study Energy Patch Startup — 12-Month Financial Projection (Year 1)</p>
 
+<h1>VIBE+ Cash Flow Statement</h1>
+<p class="subtitle">Study Energy Patch Startup — 12-Month Financial Projection (Year 1) · Currency: Vietnamese Dong (VND)</p>
+
+<div class="section-label">Scenario</div>
 <div class="scenario-bar">
-  <button class="sc-btn" onclick="setScenario('worst', this)">Worst case<br><small>270–330 packs/mo</small></button>
-  <button class="sc-btn active" onclick="setScenario('expected', this)">Expected<br><small>360–420 packs/mo</small></button>
-  <button class="sc-btn" onclick="setScenario('best', this)">Best case<br><small>420–480 packs/mo</small></button>
+  <button class="sc-btn" onclick="setScenario('worst', this)">Worst Case<br><small style="font-weight:400;">270–360 packs / month</small></button>
+  <button class="sc-btn active" onclick="setScenario('expected', this)">Expected Case<br><small style="font-weight:400;">360–390 packs / month</small></button>
+  <button class="sc-btn" onclick="setScenario('best', this)">Best Case<br><small style="font-weight:400;">420–480 packs / month</small></button>
 </div>
 
 <div class="metrics">
-  <div class="mc"><div class="mc-label">Capital Required</div><div class="mc-val">160M ₫</div></div>
-  <div class="mc"><div class="mc-label">BEP (patches)</div><div class="mc-val">52,449</div></div>
-  <div class="mc"><div class="mc-label">BEP (packages)</div><div class="mc-val">3,497</div></div>
-  <div class="mc"><div class="mc-label">Est. BEP month</div><div class="mc-val pos" id="bep-month">—</div></div>
+  <div class="mc">
+    <div class="mc-label">Total Startup Cost</div>
+    <div class="mc-val">146,545,000 ₫</div>
+  </div>
+  <div class="mc">
+    <div class="mc-label">Break-Even Point</div>
+    <div class="mc-val">50,585 patches<br><span style="font-size:12px;font-weight:400;color:var(--text2);">≈ 3,373 packages</span></div>
+  </div>
+  <div class="mc">
+    <div class="mc-label">BEP Month</div>
+    <div class="mc-val pos" id="bep-month">—</div>
+  </div>
+  <div class="mc">
+    <div class="mc-label">Year-End Cumulative</div>
+    <div class="mc-val" id="final-cum">—</div>
+  </div>
 </div>
 
+<div class="section-label">Startup Cost Breakdown</div>
+<div class="breakdown">
+  <div class="bi">
+    <div class="mc-label">Contract &amp; R&amp;D</div>
+    <div class="val">25,000,000 ₫</div>
+  </div>
+  <div class="bi">
+    <div class="mc-label">First Batch — 18,000 patches / 1,200 packs</div>
+    <div class="val">108,000,000 ₫</div>
+  </div>
+  <div class="bi">
+    <div class="mc-label">Legal &amp; Licenses (ERC, trademark, declaration)</div>
+    <div class="val">2,650,000 ₫</div>
+  </div>
+  <div class="bi">
+    <div class="mc-label">Setup (seal, USB token, invoicing software)</div>
+    <div class="val">2,000,000 ₫</div>
+  </div>
+  <div class="bi">
+    <div class="mc-label">Contingency Buffer (30% on non-production costs)</div>
+    <div class="val">8,895,000 ₫</div>
+  </div>
+  <div class="bi bi-blue">
+    <div class="mc-label">Fixed Cost / Month (vending machine rental)</div>
+    <div class="val">900,000 ₫</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section-label">Monthly Overview</div>
 <div class="legend">
-  <span class="leg-item"><span class="leg-sq" style="background:#378ADD;"></span>Revenue</span>
-  <span class="leg-item"><span class="leg-sq" style="background:#D85A30;"></span>Total cost</span>
-  <span class="leg-item"><span class="leg-sq" style="background:#1D9E75;"></span>Net profit</span>
-  <span class="leg-item"><span class="leg-sq" style="background:#BA7517; width:20px; height:3px; border-radius:0;"></span>Monthly BEP threshold</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#85B7EB;"></span>Revenue</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#F0997B;"></span>Total Cost</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#1D9E75;"></span>Monthly Profit</span>
+  <span class="leg-item"><span class="leg-sq" style="background:#BA7517; width:20px; height:3px; border-radius:0;"></span>Cumulative Cash</span>
 </div>
 <div class="chart-wrap"><canvas id="cfChart"></canvas></div>
 
@@ -87,11 +148,12 @@
     <thead>
       <tr>
         <th>Month</th>
-        <th>Packages sold</th>
+        <th>Packs Sold</th>
+        <th>Patches</th>
         <th>Revenue (₫)</th>
-        <th>Fixed cost</th>
-        <th>Variable cost</th>
-        <th>Net profit</th>
+        <th>Fixed Cost</th>
+        <th>Variable Cost</th>
+        <th>Monthly Profit</th>
         <th>Cumulative</th>
       </tr>
     </thead>
@@ -99,70 +161,144 @@
   </table>
 </div>
 
-<div class="bep-note" id="bep-note"></div>
+<div class="note" id="bep-note"></div>
+
+<hr class="divider">
+
+<div class="section-label">Key Assumptions</div>
+<div class="assumptions">
+  <ul>
+    <li><strong>Selling price:</strong> 149,000 ₫ / pack (15 patches) — sold via school vending machines, Shopee &amp; TikTok Shop</li>
+    <li><strong>Variable cost:</strong> 7,000 ₫ / patch — 6,000 ₫ production + ~1,000 ₫ for platform fees, discounts &amp; marketing campaigns</li>
+    <li><strong>Fixed cost:</strong> 900,000 ₫ / month — 6 vending machine slots × 3 school machines</li>
+    <li><strong>Salaries:</strong> 0 ₫ — profit-sharing model replaces fixed wages; higher contributors receive higher profit share</li>
+    <li><strong>Business address:</strong> 0 ₫ — member's home address used as registered company address</li>
+    <li><strong>Storage:</strong> 1,200 packs packed into 33 noodle boxes, distributed among 12 members (3 boxes each) at room temperature</li>
+    <li><strong>Total annual cost:</strong> 146,545,000 ₫ + (900,000 ₫ × 12) = <strong>157,345,000 ₫</strong></li>
+    <li><strong>First batch unit cost:</strong> 6,000 ₫ / patch (fixed-price factory deal — excluded from 30% contingency buffer)</li>
+  </ul>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const STARTUP = 146545000;
-const FIXED_MONTHLY = 900000;
-const VAR_COST_PATCH = 7000;
-const PRICE_PACK = 149000;
-const PATCHES_PER_PACK = 15;
-const TOTAL_YEAR_COST = 157345000;
-
 const scenarios = {
-  worst:    { packs: 300 },
-  expected: { packs: 390 },
-  best:     { packs: 450 }
+  worst: {
+    label: 'Worst Case',
+    months: [
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-131245000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-118645000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-106045000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-93445000 },
+      { packs:270, patches:4050, revenue:40500000, fixed:900000, variable:28350000, profit:12150000, cum:-82195000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-69595000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-56995000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-44395000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:-31795000 },
+      { packs:270, patches:4050, revenue:40500000, fixed:900000, variable:28350000, profit:12150000, cum:-20545000 },
+      { packs:270, patches:4050, revenue:40500000, fixed:900000, variable:28350000, profit:12150000, cum:-9295000 },
+      { packs:300, patches:4500, revenue:45000000, fixed:900000, variable:31500000, profit:13500000, cum:3305000 },
+    ]
+  },
+  expected: {
+    label: 'Expected Case',
+    months: [
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-131245000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-115945000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-100645000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-85345000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-70045000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-54745000 },
+      { packs:390, patches:5850, revenue:58500000, fixed:900000, variable:40950000, profit:17550000, cum:-38095000 },
+      { packs:390, patches:5850, revenue:58500000, fixed:900000, variable:40950000, profit:17550000, cum:-21445000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:-6145000 },
+      { packs:390, patches:5850, revenue:58500000, fixed:900000, variable:40950000, profit:17550000, cum:10505000 },
+      { packs:390, patches:5850, revenue:58500000, fixed:900000, variable:40950000, profit:17550000, cum:27155000 },
+      { packs:360, patches:5400, revenue:54000000, fixed:900000, variable:37800000, profit:16200000, cum:42455000 },
+    ]
+  },
+  best: {
+    label: 'Best Case',
+    months: [
+      { packs:420, patches:6300, revenue:63000000, fixed:900000, variable:44100000, profit:18900000, cum:-128545000 },
+      { packs:450, patches:6750, revenue:67500000, fixed:900000, variable:47250000, profit:20250000, cum:-109195000 },
+      { packs:480, patches:7200, revenue:72000000, fixed:900000, variable:50400000, profit:21600000, cum:-88495000 },
+      { packs:480, patches:7200, revenue:72000000, fixed:900000, variable:50400000, profit:21600000, cum:-67795000 },
+      { packs:420, patches:6300, revenue:63000000, fixed:900000, variable:44100000, profit:18900000, cum:-49795000 },
+      { packs:420, patches:6300, revenue:63000000, fixed:900000, variable:44100000, profit:18900000, cum:-31795000 },
+      { packs:480, patches:7200, revenue:72000000, fixed:900000, variable:50400000, profit:21600000, cum:-11095000 },
+      { packs:420, patches:6300, revenue:63000000, fixed:900000, variable:44100000, profit:18900000, cum:6905000 },
+      { packs:420, patches:6300, revenue:63000000, fixed:900000, variable:44100000, profit:18900000, cum:24905000 },
+      { packs:420, patches:6300, revenue:63000000, fixed:900000, variable:44100000, profit:18900000, cum:42905000 },
+      { packs:450, patches:6750, revenue:67500000, fixed:900000, variable:47250000, profit:20250000, cum:62255000 },
+      { packs:480, patches:7200, revenue:72000000, fixed:900000, variable:50400000, profit:21600000, cum:82955000 },
+    ]
+  }
 };
 
 let chartInst = null;
 
-function fmt(n) { return Math.round(n).toLocaleString('vi-VN'); }
-
-function calcMonths(scenario) {
-  const packs = scenarios[scenario].packs;
-  const patches = packs * PATCHES_PER_PACK;
-  const revenue = packs * PRICE_PACK;
-  const varCost = patches * VAR_COST_PATCH;
-  let cumulative = -STARTUP;
-  return Array.from({length: 12}, (_, i) => {
-    const profit = revenue - FIXED_MONTHLY - varCost;
-    cumulative += profit;
-    return { m: i+1, packs, revenue, fixed: FIXED_MONTHLY, variable: varCost, profit, cumulative };
-  });
+function fmt(n) {
+  const abs = Math.abs(Math.round(n)).toLocaleString('en-US');
+  return n < 0 ? `(${abs})` : abs;
 }
 
-function findBEPMonth(rows) {
-  const mp = rows[0].profit;
-  if (mp <= 0) return null;
-  const months = Math.ceil(TOTAL_YEAR_COST / mp);
-  return months <= 12 ? months : null;
+function findBEPMonth(months) {
+  for (let i = 0; i < months.length; i++) {
+    if (months[i].cum >= 0) return i + 1;
+  }
+  return null;
 }
 
-function renderTable(rows) {
-  let html = '', cum = -STARTUP;
-  for (const r of rows) {
-    cum += r.profit;
+function renderMetrics(sc) {
+  const months = scenarios[sc].months;
+  const bep = findBEPMonth(months);
+  const finalCum = months[months.length - 1].cum;
+  document.getElementById('bep-month').textContent = bep ? `Month ${bep}` : '> 12 months';
+  const fcEl = document.getElementById('final-cum');
+  fcEl.textContent = fmt(finalCum) + ' ₫';
+  fcEl.className = 'mc-val ' + (finalCum >= 0 ? 'pos' : 'neg');
+}
+
+function renderTable(sc) {
+  const months = scenarios[sc].months;
+  let html = '';
+  for (let i = 0; i < months.length; i++) {
+    const r = months[i];
     html += `<tr>
-      <td>Month ${r.m}</td>
-      <td>${fmt(r.packs)}</td>
+      <td>Month ${i+1}</td>
+      <td>${r.packs.toLocaleString('en-US')}</td>
+      <td>${r.patches.toLocaleString('en-US')}</td>
       <td>${fmt(r.revenue)}</td>
       <td>${fmt(r.fixed)}</td>
       <td>${fmt(r.variable)}</td>
       <td class="${r.profit>=0?'pos-cell':'neg-cell'}">${r.profit>=0?'+':''}${fmt(r.profit)}</td>
-      <td class="${cum>=0?'pos-cell':'neg-cell'}">${fmt(cum)}</td>
+      <td class="${r.cum>=0?'pos-cell':'neg-cell'}">${fmt(r.cum)}</td>
     </tr>`;
   }
   document.getElementById('cf-table').innerHTML = html;
 }
 
-function renderChart(rows) {
-  const labels = rows.map(r => 'M'+r.m);
-  const revenues = rows.map(r => r.revenue/1e6);
-  const costs = rows.map(r => (r.fixed+r.variable)/1e6);
-  const profits = rows.map(r => r.profit/1e6);
-  const bepLine = rows.map(() => parseFloat((TOTAL_YEAR_COST/1e6/12).toFixed(2)));
+function renderNote(sc) {
+  const months = scenarios[sc].months;
+  const bep = findBEPMonth(months);
+  const note = document.getElementById('bep-note');
+  if (bep) {
+    note.className = 'note note-success';
+    note.textContent = `✓ Under the ${scenarios[sc].label}, VIBE+ is projected to recover all 157,345,000 ₫ in total annual costs by Month ${bep} and close Year 1 with a positive cumulative balance.`;
+  } else {
+    note.className = 'note note-warn';
+    note.textContent = `⚠ Under the ${scenarios[sc].label}, VIBE+ does not fully recover costs within Year 1. Monthly sales growth or cost reduction is recommended.`;
+  }
+}
+
+function renderChart(sc) {
+  const months = scenarios[sc].months;
+  const labels = months.map((_, i) => 'M' + (i + 1));
+  const revenues = months.map(r => r.revenue / 1e6);
+  const costs = months.map(r => (r.fixed + r.variable) / 1e6);
+  const profits = months.map(r => r.profit / 1e6);
+  const cums = months.map(r => r.cum / 1e6);
+
   if (chartInst) chartInst.destroy();
   chartInst = new Chart(document.getElementById('cfChart'), {
     type: 'bar',
@@ -171,31 +307,29 @@ function renderChart(rows) {
       datasets: [
         { label: 'Revenue', data: revenues, backgroundColor: '#85B7EB', borderRadius: 3, order: 2 },
         { label: 'Cost', data: costs, backgroundColor: '#F0997B', borderRadius: 3, order: 3 },
-        { label: 'Net profit', data: profits, type: 'line', borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', pointRadius: 3, tension: 0.3, fill: true, order: 1 },
-        { label: 'BEP/month', data: bepLine, type: 'line', borderColor: '#BA7517', borderDash: [5,4], pointRadius: 0, borderWidth: 1.5, order: 0 }
+        { label: 'Monthly Profit', data: profits, type: 'line', borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.08)', pointRadius: 3, tension: 0.3, fill: true, order: 1 },
+        { label: 'Cumulative', data: cums, type: 'line', borderColor: '#BA7517', borderDash: [5, 4], pointRadius: 2, borderWidth: 1.5, order: 0, fill: false }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.dataset.label+': '+ctx.parsed.y.toFixed(1)+'M ₫' } } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + 'M ₫' } }
+      },
       scales: {
         x: { grid: { display: false }, ticks: { autoSkip: false } },
-        y: { ticks: { callback: v => v.toFixed(0)+'M' }, grid: { color: 'rgba(128,128,128,0.1)' } }
+        y: { ticks: { callback: v => v.toFixed(0) + 'M' }, grid: { color: 'rgba(128,128,128,0.1)' } }
       }
     }
   });
 }
 
 function update(sc) {
-  const rows = calcMonths(sc);
-  const bep = findBEPMonth(rows);
-  document.getElementById('bep-month').textContent = bep ? 'Month '+bep : '>12 months';
-  const note = document.getElementById('bep-note');
-  note.textContent = bep
-    ? `At ${fmt(scenarios[sc].packs)} packages/month, VIBE+ is projected to recover the full 157,345,000 ₫ total year cost by Month ${bep}.`
-    : `At ${fmt(scenarios[sc].packs)} packages/month, VIBE+ does not reach break-even within Year 1. Monthly sales growth or cost reduction is needed.`;
-  renderTable(rows);
-  renderChart(rows);
+  renderMetrics(sc);
+  renderTable(sc);
+  renderNote(sc);
+  renderChart(sc);
 }
 
 function setScenario(sc, btn) {
